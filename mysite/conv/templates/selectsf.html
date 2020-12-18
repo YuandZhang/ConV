@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {%load static%}
+    <meta charset="UTF-8">
+    <title>疫情统计分析</title>
+</head>
+<body>
+<h2>疫情统计分析平台</h2>
+<form action='/conv/selectsfByConditions/' method='post'>
+    {%csrf_token%}
+    {%csrf_token%}
+<table border="1" width="400">
+    <tr>
+
+         <td>省份</td>
+         <td><select name="name">
+             <option value="0">--全部--</option>吃
+            <option value="北京" >北京</option>
+            <option value="上海" >上海</option>
+            <option value="天津" >天津</option>
+            <option value="重庆" >重庆</option>
+            <option value="内蒙古" >内蒙古</option>
+
+            <option value="广西" >广西</option>
+            <option value="宁夏" >宁夏</option>
+            <option value="新疆" >新疆</option>
+            <option value="西藏" >西藏</option>
+            <option value="黑龙江" >黑龙江</option>
+
+            <option value="吉林" >吉林</option>
+            <option value="辽宁" >辽宁</option>
+            <option value="河北" >河北</option>
+            <option value="山东" >山东</option>
+            <option value="江苏" >江苏</option>
+
+            <option value="浙江" >浙江</option>
+            <option value="福建" >福建</option>
+            <option value="广东" >广东</option>
+            <option value="四川" >四川</option>
+            <option value="贵州" >贵州</option>
+
+            <option value="河南" >河南</option>
+            <option value="湖南" >湖南</option>
+            <option value="湖北" >湖北</option>
+            <option value="甘肃" >甘肃</option>
+            <option value="陕西" >陕西</option>
+
+            <option value="山西" >山西</option>
+            <option value="云南" >云南</option>
+            <option value="青海" >青海</option>
+            <option value="江西" >江西</option>
+            <option value="安徽" >安徽</option>
+
+
+             <option value="海南" >海南</option>
+             <option value="台湾" >台湾</option>
+             <option value="安徽" >香港</option>
+             <option value="澳门" >澳门</option>
+
+
+            </select></td>
+    <td>搜索</td>
+        <td><input type="submit" value="搜索"></td>
+    </tr>
+
+</table>
+
+
+
+</form>
+
+<table border="1" width="95%">
+    {% for data in contacts %}
+    <tr>
+        <td>省市</td>
+        <td>现存确诊</td>
+        <td>累计确诊</td>
+        <td>疑似病例</td>
+        <td>死亡人数</td>
+        <td>治愈人数</td>
+    </tr>
+    <tr>
+        <td>{{data.name}}</td>
+        <td bgcolor="red">{{data.nowConfirm}}</td>
+        <td>{{data.confirm}}</td>
+        <td bgcolor="yellow">{{data.suspect}}</td>
+        <td bgcolor="grey">{{data.dead}}</td>
+        <td bgcolor="green">{{data.heal}}</td>
+    </tr>
+    {% endfor %}
+
+
+
+
+</table>
+<div class="pagination">
+    <span class="step-links">
+        {% if contacts.has_previous %}
+            <a href="?page={{ contacts.previous_page_number }}">上一页</a>
+        {% endif %}
+
+        <span class="current">
+            第 {{ contacts.number }}页， 共 {{ contacts.paginator.num_pages }}页.
+        </span>
+
+        {% if contacts.has_next %}
+            <a href="?page={{ contacts.next_page_number }}">下一页</a>
+        {% endif %}
+    </span>
+</div>
+ <div id="container" style="height:800px"></div>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@4/dist/echarts.min.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl@1/dist/echarts-gl.min.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat@1/dist/ecStat.min.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@4/dist/extension/dataTool.min.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@4/map/js/china.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@4/map/js/world.js"></script>
+
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@4/dist/extension/bmap.min.js"></script>
+       <script type="text/javascript">
+var dom = document.getElementById("container");
+var myChart = echarts.init(dom);
+var app = {};
+option = null;
+option = {
+    xAxis: {
+        type: 'category',
+        data: {{x_data|safe}}
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        data: {{y_data|safe}}
+,
+        type: 'bar',
+        showBackground: true,
+        backgroundStyle: {
+            color: 'rgba(220, 220, 220, 0.8)'
+        }
+    }]
+};
+;
+if (option && typeof option === "object") {
+    myChart.setOption(option, true);
+}
+       </script>
+
+
+
+
+</body>
+</html>
